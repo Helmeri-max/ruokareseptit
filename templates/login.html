@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title> Kirjaudu sisään </title>
+</head>
+
+<body>
+    <p> Kirjaudu sisään </p>
+    <hr>
+    <form action="/process_login" method="post">
+        <p>
+            Käyttäjätunnus:
+            <input type="text" name="username">
+        </p>
+        <p>
+            Salasana:
+            <input type="text" name="password">
+        </p>
+        <input type="submit" value="Kirjaudu">
+    </form>
+    <hr>
+    <p>
+        <a href="/register"> Luo uusi tunnus</a>    
+    </p>    
+    <a href="/">Takaisin etusivulle </a>
+</body>
+
+</html>
