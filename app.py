@@ -7,10 +7,12 @@ from flask import Flask
 from flask import render_template, request, redirect, session
 import sqlite3
 import db
+import config
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
 app = Flask(__name__)
+app.secret_key = config.secret_key
 
 @app.route("/")
 def index():
@@ -54,19 +56,22 @@ def process_login():
     username = request.form["username"]
     password = request.form["password"]
 
-    sql = "SELECT password_hash FROM users WHERE username = ?"
-    password_hash = db.query(sql, params=[username])[0][0]
+    try:
+        sql = "SELECT password_hash FROM users WHERE username = ?"
+        password_hash = db.query(sql, params=[username])[0][0]
+    except IndexError:
+        return "Virhe! Väärä tunnus tai salasana! <br> <a href='/login'>Yritä uudelleen<a>"
 
-    # temp
-    return redirect("/")
-
-#    if check_password_hash(password_hash, password):
-#        session["username"] = username
-#        return redirect("/")
-#    else:
-#        return "Virhe! Väärä salasana! <a href='/login'>Yritä uudelleen<a>"
+    if check_password_hash(password_hash, password):
+        session["username"] = username
+        return redirect("/")
+    else:
+        return "Virhe! Väärä tunnus tai salasana! <br> <a href='/login'>Yritä uudelleen<a>"
     
-   # SECRET KEY YMS SESSION HOITO
 
+@app.route("/logout")
+def logout():
+    del session["username"]
+    return redirect("/")    
 
 

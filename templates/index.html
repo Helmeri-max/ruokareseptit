@@ -7,8 +7,19 @@
 
 <body>
     <p> Etusivu </p>
-    <a href="/login">Kirjaudu</a>
-    <a href="/register">Luo tunnus</a>
+    <hr>
+    {% if session.username %}
+    <p>
+        Olet kirjautunut käyttäjällä <b>{{session.username}}</b> <br>
+        <a href="/logout">Kirjaudu ulos</a>
+        <hr>
+    </p>
+    {% else %}
+        <a href="/login">Kirjaudu</a>
+        <a href="/register">Luo tunnus</a>
+        <hr>
+    {% endif %}
+    
 </body>
 
 </html>
