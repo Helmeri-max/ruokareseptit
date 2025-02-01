@@ -6,7 +6,7 @@
 </head>
 
 <body>
-    <p> Etusivu </p>
+    <h1> Etusivu </h1>
     <hr>
     {% if session.username %}
     <p>
@@ -19,6 +19,16 @@
         <a href="/register">Luo tunnus</a>
         <hr>
     {% endif %}
+    
+    <h2> Uusimmat reseptit </h2>
+
+    {% for recipe in recipes %}
+    <p>
+        <a href="/recipe/{{ recipe.id }}">{{ recipe.title }}</a>
+        <br>
+    </p>
+    <hr>
+    {% endfor %}
     
 </body>
 

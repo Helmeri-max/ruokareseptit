@@ -22,3 +22,11 @@ def query(sql, params=[]):
     result = con.execute(sql, params).fetchall()
     con.close()
     return result
+
+
+def get_recipes():
+    sql = """SELECT recipe_id, r.title, count(m.comment_id) comments_total, MAX(m.sent_at) last_comment_at
+             FROM recipes r
+             LEFT JOIN comments m USING(recipe_id)
+             GROUP BY 1,2 ORDER BY 1 DESC"""
+    return query(sql)

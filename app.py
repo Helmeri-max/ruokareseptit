@@ -16,9 +16,15 @@ app.secret_key = config.secret_key
 
 @app.route("/")
 def index():
-    # etusivulle linkit kirjautumiseen ja rekisteröitymiseen
+    recipes = db.get_recipes()
+    print(recipes)
 
-    return render_template("index.html")
+    # TODO UUDEN RESEPTIN LISÄÄMINEN FUNKTIOINEEN
+    # TODO RESEPTIN POISTAMINEN JA MUOKKAAMINEN
+    # TODO RESEPTIN KOMMENTOINTI
+    # TODO RESEPTIEN SELAAMINEN JA HAKEMINEN
+
+    return render_template("index.html", recipes=recipes)
 
 # lomakkeet joilla käyttäjä syöttää tiedot
 # ohjaa sivulle /create
