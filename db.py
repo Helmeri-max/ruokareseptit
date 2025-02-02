@@ -59,3 +59,12 @@ def remove_recipe(recipe_id):
 def update_recipe(recipe_id, ingredients, instructions):
     sql = "UPDATE recipes SET ingredients = ?, instructions = ? WHERE recipe_id = ?"
     execute(sql, params=[ingredients, instructions, recipe_id])
+
+def search(word):
+    sql = """SELECT recipe_id, title, ingredients, instructions
+            FROM recipes
+            WHERE title LIKE ?
+            OR ingredients LIKE ?
+            OR instructions LIKE ?"""
+    term = "%" + word + "%" 
+    return query(sql, params=[term, term, term])

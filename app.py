@@ -124,3 +124,9 @@ def delete_recipe(recipe_id):
             db.remove_recipe(recipe_id)
         return redirect("/")
 
+
+@app.route("/search")
+def search():
+    query = request.args.get("query")
+    results = db.search(query) if query else []
+    return render_template("search.html", query=query, results=results)
