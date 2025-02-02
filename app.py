@@ -17,10 +17,7 @@ app.secret_key = config.secret_key
 @app.route("/")
 def index():
     recipes = db.get_recipes()
-    print(recipes)
 
-    # TODO UUDEN RESEPTIN LISÄÄMINEN FUNKTIOINEEN
-    # TODO RESEPTIN POISTAMINEN JA MUOKKAAMINEN
     # TODO RESEPTIN KOMMENTOINTI
     # TODO RESEPTIEN SELAAMINEN JA HAKEMINEN
 
@@ -70,6 +67,7 @@ def process_login():
 
     if check_password_hash(password_hash, password):
         session["username"] = username
+        session["user_id"] = db.get_user_id(username)
         return redirect("/")
     else:
         return "Virhe! Väärä tunnus tai salasana! <br> <a href='/login'>Yritä uudelleen<a>"
@@ -78,6 +76,51 @@ def process_login():
 @app.route("/logout")
 def logout():
     del session["username"]
+    del session["user_id"]
     return redirect("/")    
 
+
+@app.route("/add_recipe")
+def add_recipe():
+    return render_template("add_recipe.html")
+
+
+# nappaa uuden reseptin tiedot add_recipe-sivun lomakkeelta ja lisää ne tietokantaan
+# ohjaa reseptisivulle
+@app.route("/process_recipe", methods=["POST"])
+def process_recipe():
+    title = request.form["title"]
+    ingredients = request.form["ingredients"]
+    instructions = request.form["instructions"]
+    user_id = session["user_id"]
+
+    recipe_id = db.add_recipe(title, ingredients, instructions, user_id)
+    
+    return redirect("/recipe/" + str(recipe_id))
+
+@app.route("/recipe/<int:recipe_id>")
+def show_recipe(recipe_id):
+    recipe = db.get_recipe(recipe_id)
+    return render_template("recipe.html", recipe=recipe )
+
+@app.route("/edit_recipe/<int:recipe_id>", methods=["GET", "POST"])
+def edit_recipe(recipe_id):
+    recipe = db.get_recipe(recipe_id)
+    if request.method == "GET":
+        return render_template("edit.html", recipe=recipe)
+    if request.method == "POST":
+        ingredients = request.form["ingredients"]
+        instructions = request.form["instructions"]
+        db.update_recipe(recipe_id, ingredients, instructions)
+        return redirect("/recipe/" + str(recipe_id))
+
+@app.route("/delete_recipe/<int:recipe_id>", methods=["GET", "POST"])
+def delete_recipe(recipe_id):
+    recipe = db.get_recipe(recipe_id)
+    if request.method == "GET":
+        return render_template("remove.html", recipe=recipe)
+    if request.method == "POST":
+        if "continue" in request.form:
+            db.remove_recipe(recipe_id)
+        return redirect("/")
 

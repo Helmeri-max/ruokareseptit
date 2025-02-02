@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>{{recipe.title}}</title>
+</head>
+
+<body>
+    <a href="/">Takaisin etusivulle</a>
+    <hr>
+    {% if recipe.user_id == session.user_id %}
+    <p>
+        <a href="/edit_recipe/{{ recipe.recipe_id }}">Muokkaa reseptiä</a> <br>
+        <a href="/delete_recipe/{{ recipe.recipe_id }}">Poista resepti</a>
+        <hr>
+    </p>
+    {% endif %}
+    <h1>{{recipe.title}}</h1>
+    <h2>Ainesosat:</h2>
+    <pre>{{recipe.ingredients}}</pre>
+    <h2>Valmistusohje:</h2>
+    <pre>{{recipe.instructions}}</pre>
+    <hr>
+    <h3>Kommentit:</h3>
+    
+</body>
+
+</html>

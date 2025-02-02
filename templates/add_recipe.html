@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Lisää resepti</title>
+</head>
+
+<body>
+    <a href="/">Takaisin etusivulle</a>
+    <hr>
+    <h2> Lisää uusi resepti </h2>
+    <hr>
+    <form action="/process_recipe" method="post">
+
+        <p> Otsikko: <br>
+            <textarea name="title" rows="1" cols="50"></textarea>
+        </p>
+        <p> Ainesosat: <br>
+            <textarea name="ingredients" rows="12" cols="50"></textarea>
+        </p>  
+        <p> Valmistusohjeet: <br>
+            <textarea name="instructions" rows="12" cols="50"></textarea>
+        </p>
+        <input type="submit" value="Lisää resepti">
+    </form>
+</body>
+
+
+</html>
