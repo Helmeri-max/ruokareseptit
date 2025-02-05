@@ -4,7 +4,7 @@
 # Käyttäjä pystyy etsimään tietokohteita hakusanalla tai muulla perusteella.
 
 from flask import Flask
-from flask import render_template, request, redirect, session
+from flask import render_template, request, redirect, session, abort
 import sqlite3
 import db
 import config
@@ -106,6 +106,9 @@ def show_recipe(recipe_id):
 @app.route("/edit_recipe/<int:recipe_id>", methods=["GET", "POST"])
 def edit_recipe(recipe_id):
     recipe = db.get_recipe(recipe_id)
+    if recipe["user_id"] != session["user_id"]:
+        abort(403)
+
     if request.method == "GET":
         return render_template("edit.html", recipe=recipe)
     if request.method == "POST":
@@ -117,6 +120,9 @@ def edit_recipe(recipe_id):
 @app.route("/delete_recipe/<int:recipe_id>", methods=["GET", "POST"])
 def delete_recipe(recipe_id):
     recipe = db.get_recipe(recipe_id)
+    if recipe["user_id"] != session["user_id"]:
+        abort(403)
+
     if request.method == "GET":
         return render_template("remove.html", recipe=recipe)
     if request.method == "POST":

@@ -1,4 +1,8 @@
 # Ruokareseptit
+Kuinka käynnistää sovellus:
+Kloonaa repositio, käynnistä sovellus komennolla 'flask run'
+Ympäristössä täytyy olla asennettuna python, sqlite3 ja Flask-paketti.
+
 
 Tavoitteet:
 
