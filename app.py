@@ -7,6 +7,8 @@ from flask import Flask
 from flask import render_template, request, redirect, session, abort
 import sqlite3
 import db
+from db_operations import get_recipes, get_recipe, get_user_id, remove_recipe, add_recipe, update_recipe, search
+from helper import require_login
 import config
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -16,11 +18,7 @@ app.secret_key = config.secret_key
 
 @app.route("/")
 def index():
-    recipes = db.get_recipes()
-
-    # TODO RESEPTIN KOMMENTOINTI
-    # TODO RESEPTIEN SELAAMINEN JA HAKEMINEN
-
+    recipes = get_recipes()
     return render_template("index.html", recipes=recipes)
 
 # lomakkeet joilla käyttäjä syöttää tiedot
@@ -67,7 +65,7 @@ def process_login():
 
     if check_password_hash(password_hash, password):
         session["username"] = username
-        session["user_id"] = db.get_user_id(username)
+        session["user_id"] = get_user_id(username)
         return redirect("/")
     else:
         return "Virhe! Väärä tunnus tai salasana! <br> <a href='/login'>Yritä uudelleen<a>"
@@ -81,7 +79,7 @@ def logout():
 
 
 @app.route("/add_recipe")
-def add_recipe():
+def add_recipe_page():
     return render_template("add_recipe.html")
 
 
@@ -89,23 +87,29 @@ def add_recipe():
 # ohjaa reseptisivulle
 @app.route("/process_recipe", methods=["POST"])
 def process_recipe():
+    require_login()
     title = request.form["title"]
     ingredients = request.form["ingredients"]
     instructions = request.form["instructions"]
     user_id = session["user_id"]
 
-    recipe_id = db.add_recipe(title, ingredients, instructions, user_id)
+    recipe_id = add_recipe(title, ingredients, instructions, user_id)
     
     return redirect("/recipe/" + str(recipe_id))
 
 @app.route("/recipe/<int:recipe_id>")
 def show_recipe(recipe_id):
-    recipe = db.get_recipe(recipe_id)
+    recipe = get_recipe(recipe_id)
+    if not recipe:
+        abort(404)
     return render_template("recipe.html", recipe=recipe )
 
 @app.route("/edit_recipe/<int:recipe_id>", methods=["GET", "POST"])
 def edit_recipe(recipe_id):
-    recipe = db.get_recipe(recipe_id)
+    require_login()
+    recipe = get_recipe(recipe_id)
+    if not recipe:
+        abort(404)
     if recipe["user_id"] != session["user_id"]:
         abort(403)
 
@@ -114,12 +118,15 @@ def edit_recipe(recipe_id):
     if request.method == "POST":
         ingredients = request.form["ingredients"]
         instructions = request.form["instructions"]
-        db.update_recipe(recipe_id, ingredients, instructions)
+        update_recipe(recipe_id, ingredients, instructions)
         return redirect("/recipe/" + str(recipe_id))
 
 @app.route("/delete_recipe/<int:recipe_id>", methods=["GET", "POST"])
 def delete_recipe(recipe_id):
-    recipe = db.get_recipe(recipe_id)
+    require_login()
+    recipe = get_recipe(recipe_id)
+    if not recipe:
+        abort(404)
     if recipe["user_id"] != session["user_id"]:
         abort(403)
 
@@ -127,12 +134,12 @@ def delete_recipe(recipe_id):
         return render_template("remove.html", recipe=recipe)
     if request.method == "POST":
         if "continue" in request.form:
-            db.remove_recipe(recipe_id)
+            remove_recipe(recipe_id)
         return redirect("/")
 
 
 @app.route("/search")
-def search():
+def search_page():
     query = request.args.get("query")
-    results = db.search(query) if query else []
+    results = search(query) if query else []
     return render_template("search.html", query=query, results=results)
