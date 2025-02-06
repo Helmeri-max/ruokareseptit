@@ -10,11 +10,11 @@
     <form action="/edit_recipe/{{ recipe.recipe_id }}", method="post">
     <p>
         Ainesosat: <br>
-        <textarea name="ingredients" rows="12" cols="50">{{recipe.ingredients}}</textarea>
+        <textarea name="ingredients" rows="12" cols="50" maxlength="5000">{{recipe.ingredients}}</textarea>
     </p>
     <p>
         Valmistusohjeet: <br>
-        <textarea name="instructions" rows="12" cols="50">{{recipe.instructions}}</textarea>
+        <textarea name="instructions" rows="12" cols="50" maxlength="5000">{{recipe.instructions}}</textarea>
     </p>
     <input type="submit" value="Lähetä muutokset">
     </form>
