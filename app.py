@@ -2,7 +2,7 @@ from flask import Flask
 from flask import render_template, request, redirect, session, abort
 import sqlite3
 import db
-from db_operations import get_recipes, get_recipe, get_user_id, remove_recipe, add_recipe, update_recipe, search
+from db_operations import get_recipes, get_recipe, get_user_id, remove_recipe, add_recipe, update_recipe, search, add_comment, get_comments
 from helper import require_login
 import config
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -101,9 +101,10 @@ def process_recipe():
 @app.route("/recipe/<int:recipe_id>")
 def show_recipe(recipe_id):
     recipe = get_recipe(recipe_id)
+    comments = get_comments(recipe_id)
     if not recipe:
         abort(404)
-    return render_template("recipe.html", recipe=recipe )
+    return render_template("recipe.html", recipe=recipe , comments=comments)
 
 
 @app.route("/edit_recipe/<int:recipe_id>", methods=["GET", "POST"])
@@ -150,3 +151,22 @@ def search_page():
         abort(403)
     results = search(query) if query else []
     return render_template("search.html", query=query, results=results)
+
+@app.route("/add_comment", methods=["POST"])
+def add_comment_page():
+    require_login()
+    comment_content = request.form["comment"]
+    recipe_id = request.form["recipe_id"]
+    if not comment_content or not recipe_id or len(comment_content) > 5000:
+        abort(403)
+    user_id = session["user_id"]
+    comment_id = add_comment(user_id, recipe_id, comment_content)
+    return redirect("/recipe/" + str(recipe_id))
+    
+
+
+
+
+# Kommentoinnin lisäys:
+    # kommentin muokkaus-sivu + linkki reseptisivulla
+    # kommentin poisto-sivu + linkki reseptisivulla

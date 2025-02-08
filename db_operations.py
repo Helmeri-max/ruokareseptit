@@ -8,7 +8,6 @@ def get_recipes():
              GROUP BY 1,2 ORDER BY 1 DESC"""
     return db.query(sql)
 
-
 def add_recipe(title, ingredients, instructions, user_id):
     sql = """INSERT INTO recipes (title, ingredients, instructions, user_id, created_at)
             VALUES (?, ?, ?, ?, datetime('now'))"""
@@ -44,3 +43,23 @@ def search(word):
             OR instructions LIKE ?"""
     term = "%" + word + "%" 
     return db.query(sql, params=[term, term, term])
+
+def add_comment(user_id, recipe_id, comment_content):
+    sql = """INSERT INTO comments (user_id, recipe_id, comment_content, sent_at)
+            VALUES (?, ?, ?, datetime('now'))"""
+    db.execute(sql, params=[user_id, recipe_id, comment_content])
+    comment_id = db.last_insert_id()
+    return comment_id
+
+def get_comments(recipe_id):
+    sql = """SELECT username, comment_content, sent_at 
+            FROM comments 
+            LEFT JOIN users USING(user_id)
+            WHERE recipe_id = ?
+            ORDER BY 3
+            """
+    
+    return db.query(sql, params=[recipe_id])
+
+
+

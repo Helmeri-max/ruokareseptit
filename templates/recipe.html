@@ -21,8 +21,23 @@
     <h2>Valmistusohje:</h2>
     <pre>{{recipe.instructions}}</pre>
     <hr>
+    {% if session.user_id %}
+    <form action="/add_comment" method="post">
+        <p>
+            Lisää kommentti:<br>
+            <textarea name="comment" rows="5" cols="50" maxlength="5000" minlength="1"></textarea>
+        </p>
+        <input type="hidden" name="recipe_id" value="{{recipe.recipe_id}}">
+        <input type="submit" value="Lähetä">
+    </form>
+    {% endif %}
     <h3>Kommentit:</h3>
-    
+    {% for comment in comments %}
+    <p>
+        {{ comment.username }} | {{ comment.sent_at}} <br>
+        {{ comment.comment_content }}
+    </p>
+    {% endfor %}
 </body>
 
 </html>
