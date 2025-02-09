@@ -52,14 +52,22 @@ def add_comment(user_id, recipe_id, comment_content):
     return comment_id
 
 def get_comments(recipe_id):
-    sql = """SELECT username, comment_content, sent_at 
+    sql = """SELECT username, user_id, comment_id, comment_content, sent_at 
             FROM comments 
             LEFT JOIN users USING(user_id)
             WHERE recipe_id = ?
-            ORDER BY 3
+            ORDER BY 5
             """
-    
     return db.query(sql, params=[recipe_id])
 
-
-
+def get_comment(comment_id):
+    sql = """SELECT username, user_id, comment_id, recipe_id, comment_content, sent_at 
+            FROM comments
+            LEFT JOIN users USING(user_id)
+            WHERE comment_id = ?"""
+    comment = db.query(sql, params=[comment_id])
+    return comment[0] if comment else None
+    
+def remove_comment(comment_id):
+    sql = "DELETE FROM comments WHERE comment_id = ?"
+    db.execute(sql, params=[comment_id])

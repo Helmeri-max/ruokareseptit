@@ -18,5 +18,5 @@ CREATE TABLE comments (
     comment_content TEXT,
     user_id INTEGER REFERENCES users,
     sent_at TEXT,
-    recipe_id INTEGER REFERENCES recipes
+    recipe_id INTEGER REFERENCES recipes ON DELETE CASCADE
 );

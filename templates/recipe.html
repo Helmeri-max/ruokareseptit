@@ -34,8 +34,14 @@
     <h3>Kommentit:</h3>
     {% for comment in comments %}
     <p>
-        {{ comment.username }} | {{ comment.sent_at}} <br>
-        {{ comment.comment_content }}
+        {{ comment.username }} | {{ comment.sent_at}}
+            {% if comment.user_id == session.user_id %}
+                | <a href="/edit_comment/{{ comment.comment_id }}">Muokkaa</a>
+                | <a href="/delete_comment/{{ comment.comment_id }}">Poista</a>
+            {% endif %}
+        <br>
+        {{ comment.comment_content }} <br>
+        
     </p>
     {% endfor %}
 </body>

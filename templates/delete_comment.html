@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Poista kommentti</title>
+</head>
+
+<body>
+    <form action="/delete_comment/{{ comment.comment_id }}" method="post">
+        <p>
+          Haluatko varmasti poistaa kommentin?
+        </p>
+        <input type="submit" name="continue" value="Jatka" />
+        <input type="submit" name="cancel" value="Peruuta" />
+      </form>
+</body>
+
+</html>
