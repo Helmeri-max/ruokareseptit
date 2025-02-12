@@ -181,6 +181,20 @@ def delete_comment_page(comment_id):
             dbo.remove_comment(comment_id)
         return redirect("/recipe/"+str(comment["recipe_id"]))
 
+@app.route("/edit_comment/<int:comment_id>", methods=["GET", "POST"])
+def edit_comment_page(comment_id):
+    require_login()
+    comment = dbo.get_comment(comment_id)
+    if not comment:
+        abort(404)
+    if comment["user_id"] != session["user_id"]:
+        abort(403)
 
-
-# TODO: kommentin muokkaus-toiminto
+    if request.method == "GET":
+        return render_template("edit_comment.html", comment=comment)
+    if request.method == "POST":
+        comment_content = request.form["comment"]
+        if len(comment) > 5000 or not comment:
+            abort(403)
+        dbo.edit_comment(comment_content, comment_id)
+        return redirect("/recipe/" + str(comment["recipe_id"]))

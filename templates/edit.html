@@ -6,6 +6,8 @@
 </head>
 
 <body>
+    <a href="/recipe/{{recipe.recipe_id}}">Takaisin reseptiin</a>
+    <hr>
     <h1>Reseptin muokkaus</h1>
     <form action="/edit_recipe/{{ recipe.recipe_id }}", method="post">
     <p>

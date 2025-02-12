@@ -71,3 +71,7 @@ def get_comment(comment_id):
 def remove_comment(comment_id):
     sql = "DELETE FROM comments WHERE comment_id = ?"
     db.execute(sql, params=[comment_id])
+
+def edit_comment(comment_content, comment_id):
+    sql = "UPDATE comments SET comment_content = ? WHERE comment_id = ?"
+    db.execute(sql, params=[comment_content, comment_id])

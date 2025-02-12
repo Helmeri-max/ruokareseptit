@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Muokkaa kommenttia</title>
+</head>
+
+<body>
+    <a href="/recipe/{{comment.recipe_id}}">Takaisin reseptiin</a>
+    <hr>
+    <h1>Kommentin muokkaus</h1>
+    <form action="/edit_comment/{{ comment.comment_id }}", method="post">
+    <p>
+        <textarea name="comment" rows="12" cols="50" maxlength="5000" required>{{comment.comment_content}}</textarea>
+    </p>
+    <input type="submit" value="Lähetä muutokset">
+    </form>
+</body>
+
+</html>
