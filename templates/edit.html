@@ -18,6 +18,7 @@
         Valmistusohjeet: <br>
         <textarea name="instructions" rows="12" cols="50" maxlength="5000">{{recipe.instructions}}</textarea>
     </p>
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
     <input type="submit" value="Lähetä muutokset">
     </form>
 </body>

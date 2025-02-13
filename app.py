@@ -3,9 +3,10 @@ from flask import render_template, request, redirect, session, abort
 import sqlite3
 import db
 import db_operations as dbo
-from helper import require_login
+from helper import require_login, check_csrf
 import config
 from werkzeug.security import generate_password_hash, check_password_hash
+import secrets
 
 
 app = Flask(__name__)
@@ -64,6 +65,7 @@ def process_login():
     if check_password_hash(password_hash, password):
         session["username"] = username
         session["user_id"] = dbo.get_user_id(username)
+        session["csrf_token"] = secrets.token_hex(16)
         return redirect("/")
     else:
         return "Virhe! Väärä tunnus tai salasana! <br> <a href='/login'>Yritä uudelleen<a>"
@@ -84,6 +86,7 @@ def add_recipe_page():
 @app.route("/process_recipe", methods=["POST"])
 def process_recipe():
     require_login()
+    check_csrf()
     title = request.form["title"]
     ingredients = request.form["ingredients"]
     instructions = request.form["instructions"]
@@ -119,6 +122,7 @@ def edit_recipe(recipe_id):
     if request.method == "GET":
         return render_template("edit.html", recipe=recipe)
     if request.method == "POST":
+        check_csrf()
         ingredients = request.form["ingredients"]
         instructions = request.form["instructions"]
         if len(ingredients) > 5000 or len(instructions) > 5000:
@@ -139,6 +143,7 @@ def delete_recipe_page(recipe_id):
     if request.method == "GET":
         return render_template("remove.html", recipe=recipe)
     if request.method == "POST":
+        check_csrf()
         if "continue" in request.form:
             dbo.remove_recipe(recipe_id)
         return redirect("/")
@@ -156,6 +161,7 @@ def search_page():
 @app.route("/add_comment", methods=["POST"])
 def add_comment_page():
     require_login()
+    check_csrf()
     comment_content = request.form["comment"]
     recipe_id = request.form["recipe_id"]
     if not comment_content or not recipe_id or len(comment_content) > 5000:
@@ -177,6 +183,7 @@ def delete_comment_page(comment_id):
     if request.method == "GET":
         return render_template("delete_comment.html", comment=comment)
     if request.method == "POST":
+        check_csrf()
         if "continue" in request.form:
             dbo.remove_comment(comment_id)
         return redirect("/recipe/"+str(comment["recipe_id"]))
@@ -193,6 +200,7 @@ def edit_comment_page(comment_id):
     if request.method == "GET":
         return render_template("edit_comment.html", comment=comment)
     if request.method == "POST":
+        check_csrf()
         comment_content = request.form["comment"]
         if len(comment) > 5000 or not comment:
             abort(403)

@@ -13,6 +13,7 @@
     <p>
         <textarea name="comment" rows="12" cols="50" maxlength="5000" required>{{comment.comment_content}}</textarea>
     </p>
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
     <input type="submit" value="Lähetä muutokset">
     </form>
 </body>

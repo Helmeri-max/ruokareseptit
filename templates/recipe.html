@@ -28,6 +28,7 @@
             <textarea name="comment" rows="5" cols="50" maxlength="5000" minlength="1"></textarea>
         </p>
         <input type="hidden" name="recipe_id" value="{{recipe.recipe_id}}">
+        <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
         <input type="submit" value="Lähetä">
     </form>
     {% endif %}
