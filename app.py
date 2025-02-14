@@ -208,7 +208,6 @@ def edit_comment_page(comment_id):
         return redirect("/recipe/" + str(comment["recipe_id"]))
     
 
-# Käyttäjäsivut: funktio tähän, templaatti, apufunktiot, linkit templaateille
 @app.route("/user/<int:user_id>")
 def profile_page(user_id):
     user = dbo.get_user(user_id)

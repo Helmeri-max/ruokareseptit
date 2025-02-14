@@ -13,6 +13,14 @@
     <p>
         Käyttäjä on lisännyt {{ user.recipe_count }} reseptiä
     </p>
+
+    {% for recipe in users_recipes %}
+    <p>
+        <a href="/recipe/{{ recipe.recipe_id }}">{{ recipe.title }}</a>
+        <br>
+    </p>
+    {% endfor %}
+
 </body>
 
 </html>

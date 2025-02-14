@@ -10,8 +10,7 @@
     <hr>
     {% if session.username %}
     <p>
-        Olet kirjautunut käyttäjällä <b>{{session.username}}</b> <br>
-        <a href="/user/{{session.user_id}}">Käyttäjäsivu</a> <br>
+        Olet kirjautunut käyttäjällä <a href="/user/{{session.user_id}}">{{session.username}}</a> <br>
         <a href="/logout">Kirjaudu ulos</a>
         <hr>
     </p>
