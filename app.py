@@ -206,3 +206,13 @@ def edit_comment_page(comment_id):
             abort(403)
         dbo.edit_comment(comment_content, comment_id)
         return redirect("/recipe/" + str(comment["recipe_id"]))
+    
+
+# Käyttäjäsivut: funktio tähän, templaatti, apufunktiot, linkit templaateille
+@app.route("/user/<int:user_id>")
+def profile_page(user_id):
+    user = dbo.get_user(user_id)
+    if not user:
+        abort(404)
+    users_recipes = dbo.get_users_recipes(user_id)
+    return render_template("user.html", user=user, users_recipes=users_recipes)

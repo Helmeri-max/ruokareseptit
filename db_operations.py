@@ -75,3 +75,20 @@ def remove_comment(comment_id):
 def edit_comment(comment_content, comment_id):
     sql = "UPDATE comments SET comment_content = ? WHERE comment_id = ?"
     db.execute(sql, params=[comment_content, comment_id])
+
+def get_user(user_id):
+    sql = """SELECT username, users.user_id, COUNT(distinct recipe_id) as recipe_count,
+            COUNT(distinct comment_id) as comment_count
+            FROM users
+            LEFT JOIN recipes USING(user_id)
+            LEFT JOIN comments USING(recipe_id)
+            WHERE users.user_id = ?"""
+    result = db.query(sql, params=[user_id])
+    return result[0] if result else None
+
+def get_users_recipes(user_id):
+    sql = """SELECT recipe_id, title
+            FROM recipes
+            WHERE recipes.user_id = ?"""
+    result = db.query(sql, params=[user_id])
+    return result if result else None

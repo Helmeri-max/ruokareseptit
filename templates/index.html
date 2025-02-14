@@ -11,6 +11,7 @@
     {% if session.username %}
     <p>
         Olet kirjautunut käyttäjällä <b>{{session.username}}</b> <br>
+        <a href="/user/{{session.user_id}}">Käyttäjäsivu</a> <br>
         <a href="/logout">Kirjaudu ulos</a>
         <hr>
     </p>
