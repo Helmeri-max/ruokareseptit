@@ -20,6 +20,9 @@
         Reseptin luonut <a href="/user/{{ recipe.user_id }}"">{{ recipe.username }}</a> 
         {{ recipe.created_at }}
     </p> 
+    {% for tag in tags %}
+        <b>{{tag.tag_name}}</b>
+    {% endfor %}
     <h2>Ainesosat:</h2>
     <pre>{{recipe.ingredients}}</pre>
     <h2>Valmistusohje:</h2>

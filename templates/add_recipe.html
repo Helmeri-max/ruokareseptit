@@ -21,6 +21,19 @@
         <p> Valmistusohjeet: <br>
             <textarea name="instructions" rows="12" cols="50" maxlength="5000" required></textarea>
         </p>
+        <input type="checkbox" name="tag" value="1"> Vegaaninen
+        <input type="checkbox" name="tag" value="2"> Kasvis
+        <input type="checkbox" name="tag" value="3"> Liha <br>
+
+        <input type="checkbox" name="tag" value="4"> Aamiainen
+        <input type="checkbox" name="tag" value="5"> Lounas
+        <input type="checkbox" name="tag" value="6"> Päivällinen
+        <input type="checkbox" name="tag" value="7"> Välipala <br>
+
+        <input type="checkbox" name="tag" value="8"> Laktoositon
+        <input type="checkbox" name="tag" value="9"> Gluteeniton 
+        <br>
+        <br>
         <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
         <input type="submit" value="Lisää resepti">
     </form>

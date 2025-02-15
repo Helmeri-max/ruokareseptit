@@ -8,11 +8,14 @@ def get_recipes():
              GROUP BY 1,2 ORDER BY 1 DESC"""
     return db.query(sql)
 
-def add_recipe(title, ingredients, instructions, user_id):
+def add_recipe(title, ingredients, instructions, user_id, tags):
     sql = """INSERT INTO recipes (title, ingredients, instructions, user_id, created_at)
             VALUES (?, ?, ?, ?, datetime('now'))"""
     db.execute(sql, [title, ingredients, instructions, user_id])
     recipe_id = db.last_insert_id()
+    for tag in tags:
+        sql = "INSERT INTO recipe_tags (recipe_id, tag_id) VALUES (?, ?)"
+        db.execute(sql, params=[recipe_id, int(tag)])
     return recipe_id
 
 def get_user_id(username):
@@ -92,4 +95,12 @@ def get_users_recipes(user_id):
             FROM recipes
             WHERE recipes.user_id = ?"""
     result = db.query(sql, params=[user_id])
+    return result if result else None
+
+def get_tags(recipe_id):
+    sql = """SELECT tag_name
+            FROM recipe_tags
+            INNER JOIN tags USING(tag_id)
+            WHERE recipe_id = ?"""
+    result = db.query(sql, params=[recipe_id])
     return result if result else None

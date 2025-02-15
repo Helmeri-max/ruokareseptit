@@ -90,13 +90,15 @@ def process_recipe():
     title = request.form["title"]
     ingredients = request.form["ingredients"]
     instructions = request.form["instructions"]
+    tags = request.form.getlist("tag")
+    print(tags)
     user_id = session["user_id"]
 
     if len(title) > 100 or not title or len(ingredients) > 5000 \
     or len(instructions) > 5000:
         abort(403)
 
-    recipe_id = dbo.add_recipe(title, ingredients, instructions, user_id)
+    recipe_id = dbo.add_recipe(title, ingredients, instructions, user_id, tags)
     
     return redirect("/recipe/" + str(recipe_id))
 
@@ -105,9 +107,10 @@ def process_recipe():
 def show_recipe(recipe_id):
     recipe = dbo.get_recipe(recipe_id)
     comments = dbo.get_comments(recipe_id)
+    tags = dbo.get_tags(recipe_id)
     if not recipe:
         abort(404)
-    return render_template("recipe.html", recipe=recipe , comments=comments)
+    return render_template("recipe.html", recipe=recipe , comments=comments, tags = tags)
 
 
 @app.route("/edit_recipe/<int:recipe_id>", methods=["GET", "POST"])

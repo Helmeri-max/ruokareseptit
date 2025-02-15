@@ -14,6 +14,7 @@
         Käyttäjä on lisännyt {{ user.recipe_count }} reseptiä
     </p>
 
+    <h2>Käyttäjän reseptit:</h2>
     {% for recipe in users_recipes %}
     <p>
         <a href="/recipe/{{ recipe.recipe_id }}">{{ recipe.title }}</a>
