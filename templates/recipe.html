@@ -23,6 +23,12 @@
     {% for tag in tags %}
         <b>{{tag.tag_name}}</b>
     {% endfor %}
+
+    {% if image %}
+    <p>
+        <img src="/image/{{ recipe.recipe_id }}" width="400" height="300">
+    </p>
+    {% endif %}
     <h2>Ainesosat:</h2>
     <pre>{{recipe.ingredients}}</pre>
     <h2>Valmistusohje:</h2>

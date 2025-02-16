@@ -97,10 +97,27 @@ def get_users_recipes(user_id):
     result = db.query(sql, params=[user_id])
     return result if result else None
 
-def get_tags(recipe_id):
+def get_recipe_tags(recipe_id):
     sql = """SELECT tag_name
             FROM recipe_tags
             INNER JOIN tags USING(tag_id)
             WHERE recipe_id = ?"""
     result = db.query(sql, params=[recipe_id])
     return result if result else None
+
+def get_tags():
+    sql = "SELECT tag_name FROM tags"
+    return db.query(sql)
+
+def add_image(image, recipe_id):
+    if not get_image(recipe_id):
+        sql = "INSERT INTO recipe_images (recipe_id, recipe_image) VALUES (?, ?)"
+        db.execute(sql, params=[recipe_id, image])
+    else:
+        sql = "UPDATE recipe_images SET recipe_image = ? WHERE recipe_id = ?"
+        db.execute(sql, params=[image, recipe_id])
+
+def get_image(recipe_id):
+    sql = "SELECT recipe_image FROM recipe_images WHERE recipe_id = ?"
+    result = db.query(sql, params=[recipe_id])
+    return result[0][0] if result else None

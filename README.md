@@ -18,3 +18,6 @@ Tavoitteet:
 Sovelluksen nykytila
 - Käyttäjä pysyy luomaan tunnuksen ja kirjautumaan sovellukseen
 - Käyttäjä voi luoda, katsella, muokata, poistaa ja hakea reseptejä hakusanalla
+- Käyttäjä voi kommentoida omia ja muiden reseptejä, sekä muokata/poistaa kommenttinsa
+- Käyttäjätunnuksilla on omat sivunsa jossa näkyy käyttäjän reseptit
+- Lisättäessä reseptille voi antaa luokituksia

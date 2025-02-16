@@ -10,7 +10,7 @@
     <hr>
     <h2> Lisää uusi resepti </h2>
     <hr>
-    <form action="/process_recipe" method="post">
+    <form action="/process_recipe" method="post" enctype="multipart/form-data">
 
         <p> Otsikko: <br>
             <textarea name="title" rows="1" cols="50" maxlength="100" required></textarea>
@@ -34,9 +34,14 @@
         <input type="checkbox" name="tag" value="9"> Gluteeniton 
         <br>
         <br>
+        <p>
+            Lisää kuva: <input type="file" name="image" accept=".jpg" />
+          </p>
         <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
         <input type="submit" value="Lisää resepti">
     </form>
+
+
 </body>
 
 </html>

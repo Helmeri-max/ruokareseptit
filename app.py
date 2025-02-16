@@ -1,5 +1,5 @@
 from flask import Flask
-from flask import render_template, request, redirect, session, abort
+from flask import render_template, request, redirect, session, abort, make_response
 import sqlite3
 import db
 import db_operations as dbo
@@ -97,8 +97,18 @@ def process_recipe():
     if len(title) > 100 or not title or len(ingredients) > 5000 \
     or len(instructions) > 5000:
         abort(403)
-
+    
     recipe_id = dbo.add_recipe(title, ingredients, instructions, user_id, tags)
+
+    file = request.files["image"]
+    if file:
+        if not file.filename.endswith(".jpg"):
+            return "Virhe! Väärä tiedostomuoto!"
+        image = file.read()
+        if len(image) > 1000 * 1024:
+            return "Virhe! Liian suuri kuva!"
+        dbo.add_image(image, recipe_id)
+    
     
     return redirect("/recipe/" + str(recipe_id))
 
@@ -107,10 +117,14 @@ def process_recipe():
 def show_recipe(recipe_id):
     recipe = dbo.get_recipe(recipe_id)
     comments = dbo.get_comments(recipe_id)
-    tags = dbo.get_tags(recipe_id)
+    tags = dbo.get_recipe_tags(recipe_id)
     if not recipe:
         abort(404)
-    return render_template("recipe.html", recipe=recipe , comments=comments, tags = tags)
+
+    # returns None if no image in db for recipe
+    image = dbo.get_image(recipe_id)
+
+    return render_template("recipe.html", recipe=recipe , comments=comments, tags = tags, image=image)
 
 
 @app.route("/edit_recipe/<int:recipe_id>", methods=["GET", "POST"])
@@ -123,14 +137,26 @@ def edit_recipe(recipe_id):
         abort(403)
 
     if request.method == "GET":
-        return render_template("edit.html", recipe=recipe)
+        image = dbo.get_image(recipe["recipe_id"])
+        return render_template("edit.html", recipe=recipe, image=image)
     if request.method == "POST":
         check_csrf()
         ingredients = request.form["ingredients"]
         instructions = request.form["instructions"]
+
         if len(ingredients) > 5000 or len(instructions) > 5000:
             abort(403)
         dbo.update_recipe(recipe_id, ingredients, instructions)
+
+        file = request.files["image"]
+        if file:
+            if not file.filename.endswith(".jpg"):
+                return "Virhe! Väärä tiedostomuoto!"
+            image = file.read()
+            if len(image) > 1000 * 1024:
+                return "Virhe! Liian suuri kuva!"
+            dbo.add_image(image, recipe_id)
+
         return redirect("/recipe/" + str(recipe_id))
 
 
@@ -218,3 +244,17 @@ def profile_page(user_id):
         abort(404)
     users_recipes = dbo.get_users_recipes(user_id)
     return render_template("user.html", user=user, users_recipes=users_recipes)
+
+@app.route("/image/<int:recipe_id>")
+def show_image(recipe_id):
+    image = dbo.get_image(recipe_id)
+    if not image:
+        abort(404)
+
+    response = make_response(bytes(image))
+    response.headers.set("Content-Type", "image/jpeg")
+    return response
+
+
+
+# TODO lisää haku/selailu tagin mukaan, tagi voisi olla linkki muihin tagin resepteihin

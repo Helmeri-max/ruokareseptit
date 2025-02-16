@@ -9,7 +9,13 @@
     <a href="/recipe/{{recipe.recipe_id}}">Takaisin reseptiin</a>
     <hr>
     <h1>Reseptin muokkaus</h1>
-    <form action="/edit_recipe/{{ recipe.recipe_id }}", method="post">
+    {% if image %}
+    <p>
+        <img src="/image/{{ recipe.recipe_id }}" width="400" height="300">
+    </p>
+    {% endif %}
+
+    <form action="/edit_recipe/{{ recipe.recipe_id }}", method="post" enctype="multipart/form-data">
     <p>
         Ainesosat: <br>
         <textarea name="ingredients" rows="12" cols="50" maxlength="5000">{{recipe.ingredients}}</textarea>
@@ -18,6 +24,11 @@
         Valmistusohjeet: <br>
         <textarea name="instructions" rows="12" cols="50" maxlength="5000">{{recipe.instructions}}</textarea>
     </p>
+
+    <p>Lisää/vaihda reseptin kuva:
+        <input type="file" name="image" accept=".jpg" />
+    </p>
+
     <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
     <input type="submit" value="Lähetä muutokset">
     </form>
