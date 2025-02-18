@@ -1,10 +1,7 @@
 # Ruokareseptit
-Kuinka käynnistää sovellus:
-Kloonaa repositio, käynnistä sovellus komennolla 'flask run'
-Ympäristössä täytyy olla asennettuna python, sqlite3 ja Flask-paketti.
 
 
-Tavoitteet:
+## Tavoitteet:
 
 - Sovelluksessa käyttäjät pystyvät jakamaan ruokareseptejään. Reseptissä lukee tarvittavat ainekset ja valmistusohje.
 - Käyttäjä pystyy luomaan tunnuksen ja kirjautumaan sisään sovellukseen.
@@ -15,9 +12,25 @@ Tavoitteet:
 - Käyttäjä pystyy valitsemaan reseptille yhden tai useamman luokittelun (esim. alkuruoka, intialainen, vegaaninen).
 - Käyttäjä pystyy antamaan reseptille kommentin ja arvosanan. Reseptistä näytetään kommentit ja keskimääräinen arvosana.
 
-Sovelluksen nykytila
+## Sovelluksen nykytila
 - Käyttäjä pysyy luomaan tunnuksen ja kirjautumaan sovellukseen
 - Käyttäjä voi luoda, katsella, muokata, poistaa ja hakea reseptejä hakusanalla
 - Käyttäjä voi kommentoida omia ja muiden reseptejä, sekä muokata/poistaa kommenttinsa
 - Käyttäjätunnuksilla on omat sivunsa jossa näkyy käyttäjän reseptit
 - Lisättäessä reseptille voi antaa luokituksia
+
+## Sovelluksen asennus
+
+Asenna flask-kirjasto:
+```$ pip install flask```
+
+Tietokantatiedosto database.db tulee repon mukana, mutta sen tyhjentäminen onnistuu komennoilla:
+
+```
+$ rm database.db
+$ sqlite3 database.db < schema.sql
+```
+
+Voit käynnistää sovelluksen näin:
+
+```$ flask run```
