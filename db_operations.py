@@ -2,10 +2,11 @@
 import db
 
 def get_recipes():
-    sql = """SELECT recipe_id, r.title, count(m.comment_id) comments_total, MAX(m.sent_at) last_comment_at
-             FROM recipes r
-             LEFT JOIN comments m USING(recipe_id)
-             GROUP BY 1,2 ORDER BY 1 DESC"""
+    sql = """SELECT recipe_id, r.title, count(m.comment_id) comments_total, 
+            MAX(m.sent_at) last_comment_at
+            FROM recipes r
+            LEFT JOIN comments m USING(recipe_id)
+            GROUP BY 1,2 ORDER BY 1 DESC"""
     return db.query(sql)
 
 def add_recipe(title, ingredients, instructions, user_id, tags):
@@ -45,7 +46,7 @@ def search(word):
             WHERE title LIKE ?
             OR ingredients LIKE ?
             OR instructions LIKE ?"""
-    term = "%" + word + "%" 
+    term = "%" + word + "%"
     return db.query(sql, params=[term, term, term])
 
 def add_comment(user_id, recipe_id, comment_content):
@@ -56,7 +57,7 @@ def add_comment(user_id, recipe_id, comment_content):
     return comment_id
 
 def get_comments(recipe_id):
-    sql = """SELECT username, user_id, comment_id, comment_content, sent_at 
+    sql = """SELECT username, user_id, comment_id, comment_content, sent_at
             FROM comments 
             LEFT JOIN users USING(user_id)
             WHERE recipe_id = ?
@@ -65,13 +66,13 @@ def get_comments(recipe_id):
     return db.query(sql, params=[recipe_id])
 
 def get_comment(comment_id):
-    sql = """SELECT username, user_id, comment_id, recipe_id, comment_content, sent_at 
+    sql = """SELECT username, user_id, comment_id, recipe_id, comment_content, sent_at
             FROM comments
             LEFT JOIN users USING(user_id)
             WHERE comment_id = ?"""
     comment = db.query(sql, params=[comment_id])
     return comment[0] if comment else None
-    
+
 def remove_comment(comment_id):
     sql = "DELETE FROM comments WHERE comment_id = ?"
     db.execute(sql, params=[comment_id])

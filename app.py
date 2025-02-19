@@ -1,28 +1,29 @@
+import sqlite3
+import secrets
+
 from flask import Flask
 from flask import render_template, request, redirect, session, abort, make_response
-import sqlite3
+from werkzeug.security import generate_password_hash, check_password_hash
+
 import db
+import config
 import db_operations as dbo
 from helper import require_login, check_csrf
-import config
-from werkzeug.security import generate_password_hash, check_password_hash
-import secrets
+
+
 
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
-
 
 @app.route("/")
 def index():
     recipes = dbo.get_recipes()
     return render_template("index.html", recipes=recipes)
 
-
 @app.route("/register")
 def register():
     return render_template("register.html")
-
 
 @app.route("/create", methods=["POST"])
 def create():
@@ -43,11 +44,9 @@ def create():
         return "Virhe! Tunnus on jo käytössä! <a href='/register'>Yritä uudelleen<a>"
     return redirect("/login")
 
-
 @app.route("/login")
 def login():
     return render_template("login.html")
-
 
 @app.route("/process_login", methods=["POST"])
 def process_login():
@@ -67,21 +66,17 @@ def process_login():
         session["user_id"] = dbo.get_user_id(username)
         session["csrf_token"] = secrets.token_hex(16)
         return redirect("/")
-    else:
-        return "Virhe! Väärä tunnus tai salasana! <br> <a href='/login'>Yritä uudelleen<a>"
-    
+    return "Virhe! Väärä tunnus tai salasana! <br> <a href='/login'>Yritä uudelleen<a>"
 
 @app.route("/logout")
 def logout():
     del session["username"]
     del session["user_id"]
-    return redirect("/")    
-
+    return redirect("/")
 
 @app.route("/add_recipe")
 def add_recipe_page():
     return render_template("add_recipe.html")
-
 
 @app.route("/process_recipe", methods=["POST"])
 def process_recipe():
@@ -97,7 +92,7 @@ def process_recipe():
     if len(title) > 100 or not title or len(ingredients) > 5000 \
     or len(instructions) > 5000:
         abort(403)
-    
+
     recipe_id = dbo.add_recipe(title, ingredients, instructions, user_id, tags)
 
     file = request.files["image"]
@@ -108,10 +103,8 @@ def process_recipe():
         if len(image) > 1000 * 1024:
             return "Virhe! Liian suuri kuva!"
         dbo.add_image(image, recipe_id)
-    
-    
-    return redirect("/recipe/" + str(recipe_id))
 
+    return redirect("/recipe/" + str(recipe_id))
 
 @app.route("/recipe/<int:recipe_id>")
 def show_recipe(recipe_id):
@@ -124,8 +117,8 @@ def show_recipe(recipe_id):
     # returns None if no image in db for recipe
     image = dbo.get_image(recipe_id)
 
-    return render_template("recipe.html", recipe=recipe , comments=comments, tags = tags, image=image)
-
+    return render_template("recipe.html", recipe=recipe, comments=comments,\
+                            tags = tags, image=image)
 
 @app.route("/edit_recipe/<int:recipe_id>", methods=["GET", "POST"])
 def edit_recipe(recipe_id):
@@ -135,7 +128,6 @@ def edit_recipe(recipe_id):
         abort(404)
     if recipe["user_id"] != session["user_id"]:
         abort(403)
-
     if request.method == "GET":
         image = dbo.get_image(recipe["recipe_id"])
         return render_template("edit.html", recipe=recipe, image=image)
@@ -159,7 +151,6 @@ def edit_recipe(recipe_id):
 
         return redirect("/recipe/" + str(recipe_id))
 
-
 @app.route("/delete_recipe/<int:recipe_id>", methods=["GET", "POST"])
 def delete_recipe_page(recipe_id):
     require_login()
@@ -177,7 +168,6 @@ def delete_recipe_page(recipe_id):
             dbo.remove_recipe(recipe_id)
         return redirect("/")
 
-
 @app.route("/search")
 def search_page():
     query = request.args.get("query")
@@ -185,7 +175,6 @@ def search_page():
         abort(403)
     results = dbo.search(query) if query else []
     return render_template("search.html", query=query, results=results)
-
 
 @app.route("/add_comment", methods=["POST"])
 def add_comment_page():
@@ -196,10 +185,9 @@ def add_comment_page():
     if not comment_content or not recipe_id or len(comment_content) > 5000:
         abort(403)
     user_id = session["user_id"]
-    comment_id = dbo.add_comment(user_id, recipe_id, comment_content)
+    dbo.add_comment(user_id, recipe_id, comment_content)
     return redirect("/recipe/" + str(recipe_id))
-    
-    
+
 @app.route("/delete_comment/<int:comment_id>", methods=["GET", "POST"])
 def delete_comment_page(comment_id):
     require_login()
@@ -215,7 +203,7 @@ def delete_comment_page(comment_id):
         check_csrf()
         if "continue" in request.form:
             dbo.remove_comment(comment_id)
-        return redirect("/recipe/"+str(comment["recipe_id"]))
+        return redirect("/recipe/" + str(comment["recipe_id"]))
 
 @app.route("/edit_comment/<int:comment_id>", methods=["GET", "POST"])
 def edit_comment_page(comment_id):
@@ -235,7 +223,6 @@ def edit_comment_page(comment_id):
             abort(403)
         dbo.edit_comment(comment_content, comment_id)
         return redirect("/recipe/" + str(comment["recipe_id"]))
-    
 
 @app.route("/user/<int:user_id>")
 def profile_page(user_id):
@@ -254,7 +241,3 @@ def show_image(recipe_id):
     response = make_response(bytes(image))
     response.headers.set("Content-Type", "image/jpeg")
     return response
-
-
-
-# TODO lisää haku/selailu tagin mukaan, tagi voisi olla linkki muihin tagin resepteihin
