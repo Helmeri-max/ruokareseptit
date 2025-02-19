@@ -8,10 +8,11 @@
 <body>
     <a href="/recipe/{{comment.recipe_id}}">Takaisin reseptiin</a>
     <hr>
-    <h1>Kommentin muokkaus</h1>
+    
     <form action="/edit_comment/{{ comment.comment_id }}", method="post">
     <p>
-        <textarea name="comment" rows="12" cols="50" maxlength="5000" required>{{comment.comment_content}}</textarea>
+        <label for="comment"><h1>Kommentin muokkaus</h1></label> <br>
+        <textarea name="comment" id="comment" rows="12" cols="50" maxlength="5000" required>{{comment.comment_content}}</textarea>
     </p>
     <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
     <input type="submit" value="Lähetä muutokset">

@@ -12,11 +12,11 @@
 
     <form action="/search" method="get">
         <p>
-            Hakusana:
+            <label for="query">Hakusana</label>: <br>
             {% if query %}
-            <input type="text" name="query" value="{{query}}">
+            <input type="text" name="query" id="query" value="{{query}}">
             {% else %}
-            <input type="text" name="query" maxlength="100">
+            <input type="text" name="query" id="query" maxlength="100">
             {% endif %}
         </p>
         <input type="submit" value="Hae">

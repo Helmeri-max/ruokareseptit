@@ -11,22 +11,22 @@
     <h1>Reseptin muokkaus</h1>
     {% if image %}
     <p>
-        <img src="/image/{{ recipe.recipe_id }}" width="400" height="300">
+        <img src="/image/{{ recipe.recipe_id }}" width="400" height="300" alt="Käyttäjän lisäämä reseptin kuva">
     </p>
     {% endif %}
 
     <form action="/edit_recipe/{{ recipe.recipe_id }}", method="post" enctype="multipart/form-data">
     <p>
-        Ainesosat: <br>
-        <textarea name="ingredients" rows="12" cols="50" maxlength="5000">{{recipe.ingredients}}</textarea>
+        <label for="ingredients">Ainesosat</label>: <br>
+        <textarea name="ingredients" id="ingredients" rows="12" cols="50" maxlength="5000">{{recipe.ingredients}}</textarea>
     </p>
     <p>
-        Valmistusohjeet: <br>
-        <textarea name="instructions" rows="12" cols="50" maxlength="5000">{{recipe.instructions}}</textarea>
+        <label for="instructions">Valmistusohjeet</label>: <br>
+        <textarea name="instructions" id="instructions" rows="12" cols="50" maxlength="5000">{{recipe.instructions}}</textarea>
     </p>
 
-    <p>Lisää/vaihda reseptin kuva:
-        <input type="file" name="image" accept=".jpg" />
+    <p> <label for="image">Lisää/vaihda reseptin kuva</label>:
+        <input type="file" name="image" id="image" accept=".jpg" />
     </p>
 
     <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />

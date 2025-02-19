@@ -10,12 +10,12 @@
     <hr>
     <form action="/process_login" method="post">
         <p>
-            Käyttäjätunnus:
-            <input type="text" name="username" maxlength="100">
+            <label for="username">Käyttäjätunnus</label>:
+            <input type="text" id="username" name="username" maxlength="100">
         </p>
         <p>
-            Salasana:
-            <input type="password" name="password" maxlength="100">
+            <label for="password">Salasana</label>:
+            <input type="password" id="password" name="password" maxlength="100">
         </p>
         <input type="submit" value="Kirjaudu">
     </form>

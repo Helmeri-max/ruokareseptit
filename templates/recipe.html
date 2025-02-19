@@ -26,7 +26,7 @@
 
     {% if image %}
     <p>
-        <img src="/image/{{ recipe.recipe_id }}" width="400" height="300">
+        <img src="/image/{{ recipe.recipe_id }}" alt="Käyttäjän lisäämä reseptin kuva" width="400" height="300">
     </p>
     {% endif %}
     <h2>Ainesosat:</h2>
@@ -37,8 +37,8 @@
     {% if session.user_id %}
     <form action="/add_comment" method="post">
         <p>
-            Lisää kommentti:<br>
-            <textarea name="comment" rows="5" cols="50" maxlength="5000" minlength="1"></textarea>
+            <label for="comment">Lisää kommentti</label>:<br>
+            <textarea name="comment" id="comment" rows="5" cols="50" maxlength="5000" minlength="1"></textarea>
         </p>
         <input type="hidden" name="recipe_id" value="{{recipe.recipe_id}}">
         <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />

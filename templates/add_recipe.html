@@ -12,14 +12,14 @@
     <hr>
     <form action="/process_recipe" method="post" enctype="multipart/form-data">
 
-        <p> Otsikko: <br>
-            <textarea name="title" rows="1" cols="50" maxlength="100" required></textarea>
+        <p> <label for="title">Otsikko</label>: <br>
+            <textarea name="title" id="title" rows="1" cols="50" maxlength="100" required></textarea>
         </p>
-        <p> Ainesosat: <br>
-            <textarea name="ingredients" rows="12" cols="50" maxlength="5000" required></textarea>
+        <p> <label for="ingredients">Ainesosat</label>: <br>
+            <textarea name="ingredients" id="ingredients" rows="12" cols="50" maxlength="5000" required></textarea>
         </p>  
-        <p> Valmistusohjeet: <br>
-            <textarea name="instructions" rows="12" cols="50" maxlength="5000" required></textarea>
+        <p> <label for="instructions">Ohjeet</label>:<br>
+            <textarea name="instructions" id="instructions" rows="12" cols="50" maxlength="5000" required></textarea>
         </p>
         <input type="checkbox" name="tag" value="1"> Vegaaninen
         <input type="checkbox" name="tag" value="2"> Kasvis
@@ -35,7 +35,8 @@
         <br>
         <br>
         <p>
-            Lisää kuva: <input type="file" name="image" accept=".jpg" />
+            <label for="image">Lisää kuva</label>:  
+            <input type="file" name="image" id="image" accept=".jpg" />
           </p>
         <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
         <input type="submit" value="Lisää resepti">

@@ -8,16 +8,16 @@
 <body>
   <form action="/create" method="post">
     <p>
-      Tunnus: <br />
-      <input type="text" name="username" maxlength="100" required/>
+      <label for="username">Käyttäjätunnus</label>:<br />
+      <input type="text" id="username" name="username" maxlength="100" required/>
     </p>
     <p>
-      Salasana: <br />
-      <input type="password" name="password1" maxlength="100" required/>
+      <label for="password1">Salasana</label>: <br />
+      <input type="password" id="password1" name="password1" maxlength="100" required/>
     </p>
     <p>
-      Salasana uudestaan: <br />
-      <input type="password" name="password2" maxlength="100" required/>
+      <label for="password2">Salasana uudestaan</label>: <br />
+      <input type="password" id="password2" name="password2" maxlength="100" required/>
     </p>
     <input type="submit" value="Luo tunnus" />
   </form>
