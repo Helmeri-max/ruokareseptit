@@ -17,14 +17,14 @@
     {% endif %}
     <h1>{{recipe.title}}</h1>
     <p>
-        Reseptin luonut <a href="/user/{{ recipe.user_id }}"">{{ recipe.username }}</a> 
+        Reseptin luonut <a href="/user/{{ recipe.user_id }}">{{ recipe.username }}</a> 
         {{ recipe.created_at }}
     </p> 
     {% for tag in tags %}
         <b>{{tag.tag_name}}</b>
     {% endfor %}
 
-    {% if image %}
+    {% if recipe.recipe_image %}
     <p>
         <img src="/image/{{ recipe.recipe_id }}" alt="Käyttäjän lisäämä reseptin kuva" width="400" height="300">
     </p>

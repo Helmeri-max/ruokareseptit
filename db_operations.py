@@ -25,9 +25,10 @@ def get_user_id(username):
     return user_id
 
 def get_recipe(recipe_id):
-    sql = """SELECT recipe_id, title, ingredients, instructions, user_id, username, created_at
+    sql = """SELECT recipe_id, title, ingredients, instructions, user_id, username, created_at, recipe_image
             FROM recipes 
             LEFT JOIN users USING(user_id)
+            LEFT JOIN recipe_images USING(recipe_id)
             WHERE recipe_id = ?"""
     recipe = db.query(sql, params=[recipe_id])
     return recipe[0] if recipe else None

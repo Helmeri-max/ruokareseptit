@@ -114,11 +114,7 @@ def show_recipe(recipe_id):
     if not recipe:
         abort(404)
 
-    # returns None if no image in db for recipe
-    image = dbo.get_image(recipe_id)
-
-    return render_template("recipe.html", recipe=recipe, comments=comments,\
-                            tags = tags, image=image)
+    return render_template("recipe.html", recipe=recipe, comments=comments, tags = tags)
 
 @app.route("/edit_recipe/<int:recipe_id>", methods=["GET", "POST"])
 def edit_recipe(recipe_id):
@@ -129,8 +125,7 @@ def edit_recipe(recipe_id):
     if recipe["user_id"] != session["user_id"]:
         abort(403)
     if request.method == "GET":
-        image = dbo.get_image(recipe["recipe_id"])
-        return render_template("edit.html", recipe=recipe, image=image)
+        return render_template("edit.html", recipe=recipe)
     if request.method == "POST":
         check_csrf()
         ingredients = request.form["ingredients"]

@@ -9,7 +9,7 @@
     <a href="/recipe/{{recipe.recipe_id}}">Takaisin reseptiin</a>
     <hr>
     <h1>Reseptin muokkaus</h1>
-    {% if image %}
+    {% if recipe.recipe_image %}
     <p>
         <img src="/image/{{ recipe.recipe_id }}" width="400" height="300" alt="Käyttäjän lisäämä reseptin kuva">
     </p>
