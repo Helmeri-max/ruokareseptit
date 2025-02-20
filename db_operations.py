@@ -1,13 +1,17 @@
 # FUNCTIONS THAT OPERATE THE DATABASE IN THIS WEBAPP
 import db
 
-def get_recipes():
+def get_recipes(page, page_size):
     sql = """SELECT recipe_id, r.title, count(m.comment_id) comments_total, 
             MAX(m.sent_at) last_comment_at
             FROM recipes r
             LEFT JOIN comments m USING(recipe_id)
-            GROUP BY 1,2 ORDER BY 1 DESC"""
-    return db.query(sql)
+            GROUP BY 1,2 ORDER BY 1 DESC
+            LIMIT ? OFFSET ?"""
+    limit = page_size
+    offset = page_size * (page - 1)
+    result = db.query(sql, params=[limit, offset])
+    return  result if result else None
 
 def add_recipe(title, ingredients, instructions, user_id, tags):
     sql = """INSERT INTO recipes (title, ingredients, instructions, user_id, created_at)
@@ -92,11 +96,14 @@ def get_user(user_id):
     result = db.query(sql, params=[user_id])
     return result[0] if result else None
 
-def get_users_recipes(user_id):
+def get_users_recipes(user_id, page, page_size):
     sql = """SELECT recipe_id, title
             FROM recipes
-            WHERE recipes.user_id = ?"""
-    result = db.query(sql, params=[user_id])
+            WHERE recipes.user_id = ?
+            LIMIT ? OFFSET ?"""
+    limit = page_size
+    offset = page_size * (page - 1)
+    result = db.query(sql, params=[user_id, limit, offset])
     return result if result else None
 
 def get_recipe_tags(recipe_id):
@@ -123,3 +130,7 @@ def get_image(recipe_id):
     sql = "SELECT recipe_image FROM recipe_images WHERE recipe_id = ?"
     result = db.query(sql, params=[recipe_id])
     return result[0][0] if result else None
+
+def recipe_count():
+    sql = "SELECT COUNT(*) FROM recipes"
+    return db.query(sql)[0][0]

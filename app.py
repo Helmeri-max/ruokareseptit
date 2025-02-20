@@ -1,5 +1,6 @@
 import sqlite3
 import secrets
+import math
 
 from flask import Flask
 from flask import render_template, request, redirect, session, abort, make_response
@@ -17,9 +18,20 @@ app = Flask(__name__)
 app.secret_key = config.secret_key
 
 @app.route("/")
-def index():
-    recipes = dbo.get_recipes()
-    return render_template("index.html", recipes=recipes)
+@app.route("/<int:page>")
+def index(page=1):
+    page_size = 20
+    recipe_count = dbo.recipe_count()
+    page_count = math.ceil(recipe_count / page_size)
+    page_count = max(page_count, 1)
+
+    if page < 1:
+        return redirect("/1")
+    if page > page_count:
+        return redirect("/" + str(page_count))
+
+    recipes = dbo.get_recipes(page, page_size)
+    return render_template("index.html", recipes=recipes, page=page, page_count=page_count)
 
 @app.route("/register")
 def register():
@@ -220,12 +232,23 @@ def edit_comment_page(comment_id):
         return redirect("/recipe/" + str(comment["recipe_id"]))
 
 @app.route("/user/<int:user_id>")
-def profile_page(user_id):
+@app.route("/user/<int:user_id>/<int:page>")
+def profile_page(user_id, page=1):
     user = dbo.get_user(user_id)
     if not user:
         abort(404)
-    users_recipes = dbo.get_users_recipes(user_id)
-    return render_template("user.html", user=user, users_recipes=users_recipes)
+    page_size = 30
+    recipe_count = user["recipe_count"]
+    page_count = math.ceil(recipe_count / page_size)
+    page_count = max(page_count, 1)
+
+    if page < 1:
+        return redirect("/user/" + str(user_id) + "/1")
+    if page > page_count:
+        return redirect("/user/" + str(user_id) + "/" + str(page_count))
+
+    users_recipes = dbo.get_users_recipes(user_id, page, page_size)
+    return render_template("user.html", user=user, users_recipes=users_recipes, page=page, page_count=page_count)
 
 @app.route("/image/<int:recipe_id>")
 def show_image(recipe_id):
@@ -236,3 +259,6 @@ def show_image(recipe_id):
     response = make_response(bytes(image))
     response.headers.set("Content-Type", "image/jpeg")
     return response
+
+
+# TODO: ADD PAGINATION TO SEARCH PAGE

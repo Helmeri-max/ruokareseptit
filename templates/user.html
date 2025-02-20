@@ -22,6 +22,12 @@
     </p>
     {% endfor %}
 
+    <p>
+        <a href="/user/{{ user.user_id }}/{{ page - 1 }}">&lt;&lt;</a>
+        Sivu {{ page }}/{{ page_count }}
+        <a href="/user/{{ user.user_id }}/{{ page + 1 }}">&gt;&gt;</a>
+      </p>
+      <hr />
 </body>
 
 </html>
