@@ -14,7 +14,7 @@
         <p>
             <label for="query">Hakusana</label>: <br>
             {% if query %}
-            <input type="text" name="query" id="query" value="{{query}}">
+            <input type="text" name="query" id="query" value="{{query}}" maxlength="100">
             {% else %}
             <input type="text" name="query" id="query" maxlength="100">
             {% endif %}
@@ -32,6 +32,10 @@
         </li>
     {% endfor %}
     {% endif %}
+    <br>
+    <a href="{{ url_for('search_page', query=query, page=page-1) }}">&lt;&lt;</a>
+    Sivu {{ page }}/{{ page_count }}
+    <a href="{{ url_for('search_page', query=query, page=page+1) }}">&gt;&gt;</a>
 </body>
 
 </html>

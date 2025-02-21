@@ -3,7 +3,7 @@ import secrets
 import math
 
 from flask import Flask
-from flask import render_template, request, redirect, session, abort, make_response
+from flask import render_template, request, redirect, session, abort, make_response, url_for
 from werkzeug.security import generate_password_hash, check_password_hash
 
 import db
@@ -126,7 +126,7 @@ def show_recipe(recipe_id):
     if not recipe:
         abort(404)
 
-    return render_template("recipe.html", recipe=recipe, comments=comments, tags = tags)
+    return render_template("recipe.html", recipe=recipe, comments=comments, tags=tags)
 
 @app.route("/edit_recipe/<int:recipe_id>", methods=["GET", "POST"])
 def edit_recipe(recipe_id):
@@ -176,12 +176,24 @@ def delete_recipe_page(recipe_id):
         return redirect("/")
 
 @app.route("/search")
-def search_page():
-    query = request.args.get("query")
+def search_page(page=1):
+    query = request.args.get("query","")
+    page = request.args.get("page", 1, type=int)
     if len(query) > 100:
         abort(403)
-    results = dbo.search(query) if query else []
-    return render_template("search.html", query=query, results=results)
+
+    page_size = 30
+    recipe_count = dbo.search_count(query)
+    page_count = math.ceil(recipe_count / page_size)
+    page_count = max(page_count, 1)
+
+    if page < 1:
+        return redirect(url_for("search_page", query=query, page=1))
+    if page > page_count:
+        return redirect(url_for("search_page", query=query, page=page_count))
+
+    results = dbo.search(query, page, page_size) if recipe_count > 0 else []
+    return render_template("search.html", query=query, results=results, page=page, page_count=page_count)
 
 @app.route("/add_comment", methods=["POST"])
 def add_comment_page():
@@ -261,4 +273,4 @@ def show_image(recipe_id):
     return response
 
 
-# TODO: ADD PAGINATION TO SEARCH PAGE
+# TODO: ADD PAGINATION TO SEARCH PAGE 
