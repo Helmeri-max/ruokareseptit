@@ -41,14 +41,14 @@
     <hr>
     
     <h2> Uusimmat reseptit </h2>
-
-    {% for recipe in recipes %}
-    <p>
-        <a href="/recipe/{{ recipe.recipe_id }}">{{ recipe.title }}</a>
-        <br>
-    </p>
-    {% endfor %}
-
+    {% if recipes %}
+        {% for recipe in recipes %}
+        <p>
+            <a href="/recipe/{{ recipe.recipe_id }}">{{ recipe.title }}</a>
+            <br>
+        </p>
+        {% endfor %}
+    {% endif %}
     <p>
         <a href="/{{ page - 1 }}">&lt;&lt;</a>
         Sivu {{ page }}/{{ page_count }}

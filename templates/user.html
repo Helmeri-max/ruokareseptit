@@ -15,13 +15,14 @@
     </p>
 
     <h2>Käyttäjän reseptit:</h2>
-    {% for recipe in users_recipes %}
-    <p>
-        <a href="/recipe/{{ recipe.recipe_id }}">{{ recipe.title }}</a>
-        <br>
-    </p>
-    {% endfor %}
-
+    {% if users_recipes %}
+      {% for recipe in users_recipes %}
+      <p>
+          <a href="/recipe/{{ recipe.recipe_id }}">{{ recipe.title }}</a>
+          <br>
+      </p>
+      {% endfor %}
+    {% endif %}
     <p>
         <a href="/user/{{ user.user_id }}/{{ page - 1 }}">&lt;&lt;</a>
         Sivu {{ page }}/{{ page_count }}

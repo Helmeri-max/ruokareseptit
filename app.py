@@ -11,9 +11,6 @@ import config
 import db_operations as dbo
 from helper import require_login, check_csrf
 
-
-
-
 app = Flask(__name__)
 app.secret_key = config.secret_key
 
@@ -193,7 +190,8 @@ def search_page(page=1):
         return redirect(url_for("search_page", query=query, page=page_count))
 
     results = dbo.search(query, page, page_size) if recipe_count > 0 else []
-    return render_template("search.html", query=query, results=results, page=page, page_count=page_count)
+    return render_template("search.html", query=query, results=results, page=page, \
+                            page_count=page_count)
 
 @app.route("/add_comment", methods=["POST"])
 def add_comment_page():
@@ -260,7 +258,8 @@ def profile_page(user_id, page=1):
         return redirect("/user/" + str(user_id) + "/" + str(page_count))
 
     users_recipes = dbo.get_users_recipes(user_id, page, page_size)
-    return render_template("user.html", user=user, users_recipes=users_recipes, page=page, page_count=page_count)
+    return render_template("user.html", user=user, users_recipes=users_recipes, \
+                           page=page, page_count=page_count)
 
 @app.route("/image/<int:recipe_id>")
 def show_image(recipe_id):
@@ -271,6 +270,3 @@ def show_image(recipe_id):
     response = make_response(bytes(image))
     response.headers.set("Content-Type", "image/jpeg")
     return response
-
-
-# TODO: ADD PAGINATION TO SEARCH PAGE 

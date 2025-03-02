@@ -46,3 +46,9 @@ INSERT INTO tags (tag_id, tag_name) VALUES
 (7, 'Välipala'),
 (8, 'Laktoositon'),
 (9, 'Gluteeniton');
+
+CREATE INDEX idx_recipe ON recipes (recipe_id, user_id);
+CREATE INDEX idx_comments ON comments (recipe_id);
+CREATE INDEX idx_comments_composite ON comments (recipe_id, sent_at DESC);
+CREATE INDEX idx_tags ON recipe_tags (recipe_id);
+CREATE INDEX idx_images ON recipe_images (recipe_id);

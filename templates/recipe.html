@@ -20,10 +20,11 @@
         Reseptin luonut <a href="/user/{{ recipe.user_id }}">{{ recipe.username }}</a> 
         {{ recipe.created_at }}
     </p> 
-    {% for tag in tags %}
-        <b>{{tag.tag_name}}</b>
-    {% endfor %}
-
+    {% if tags %}
+        {% for tag in tags %}
+            <b>{{tag.tag_name}}</b>
+        {% endfor %}
+    {% endif %}
     {% if recipe.recipe_image %}
     <p>
         <img src="/image/{{ recipe.recipe_id }}" alt="Käyttäjän lisäämä reseptin kuva" width="400" height="300">
