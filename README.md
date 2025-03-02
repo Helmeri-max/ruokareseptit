@@ -34,3 +34,7 @@ $ sqlite3 database.db < schema.sql
 Voit käynnistää sovelluksen näin:
 
 ```$ flask run```
+
+
+## Sovelluksen suorituskyky suurella datamäärällä
+Indeksien ja sivutuksen lisäämisen jälkeen etusivu latautuu n. 0.2 sekunnissa, seed.py tiedostossa generoidulla tietokannan sisällöllä. (100k reseptiä, 1M kommenttia). 
