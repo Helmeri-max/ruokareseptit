@@ -12,7 +12,7 @@
 - Käyttäjä pystyy valitsemaan reseptille yhden tai useamman luokittelun (esim. alkuruoka, intialainen, vegaaninen).
 - Käyttäjä pystyy antamaan reseptille kommentin ja arvosanan. Reseptistä näytetään kommentit ja keskimääräinen arvosana.
 
-## Sovelluksen nykytila
+## Sovelluksen lopullinen tila
 - Käyttäjä pysyy luomaan tunnuksen ja kirjautumaan sovellukseen
 - Käyttäjä voi luoda, katsella, muokata, poistaa ja hakea reseptejä hakusanalla
 - Käyttäjä voi kommentoida omia ja muiden reseptejä, sekä muokata/poistaa kommenttinsa
@@ -24,7 +24,7 @@
 Asenna flask-kirjasto:
 ```$ pip install flask```
 
-Tietokantatiedosto database.db tulee repon mukana, mutta sen tyhjentäminen onnistuu komennoilla:
+Tietokantatiedosto database.db tulee repon mukana, mutta sen tyhjentäminen muutamista testiresepteistä onnistuu komennoilla:
 
 ```
 $ rm database.db
