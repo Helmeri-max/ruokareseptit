@@ -44,13 +44,13 @@ def create():
         abort(403)
 
     if password1 != password2:
-        return "Virhe! Salasanat eivät täsmää! <a href='/register'>Yritä uudelleen<a>"
+        return render_template("error_password.html")
     try:
         password_hash = generate_password_hash(password1)
         sql = "INSERT INTO users (username, password_hash) VALUES (?, ?)"
         db.execute(sql, params=[username, password_hash])
     except sqlite3.IntegrityError:
-        return "Virhe! Tunnus on jo käytössä! <a href='/register'>Yritä uudelleen<a>"
+        return render_template("error_username.html")
     return redirect("/login")
 
 @app.route("/login")
@@ -68,14 +68,14 @@ def process_login():
         sql = "SELECT password_hash FROM users WHERE username = ?"
         password_hash = db.query(sql, params=[username])[0][0]
     except IndexError:
-        return "Virhe! Väärä tunnus tai salasana! <br> <a href='/login'>Yritä uudelleen<a>"
+        return render_template("error_login.html")
 
     if check_password_hash(password_hash, password):
         session["username"] = username
         session["user_id"] = dbo.get_user_id(username)
         session["csrf_token"] = secrets.token_hex(16)
         return redirect("/")
-    return "Virhe! Väärä tunnus tai salasana! <br> <a href='/login'>Yritä uudelleen<a>"
+    return render_template("error_login.html")
 
 @app.route("/logout")
 def logout():
@@ -107,10 +107,10 @@ def process_recipe():
     file = request.files["image"]
     if file:
         if not file.filename.endswith(".jpg"):
-            return "Virhe! Väärä tiedostomuoto!"
+            return render_template("error_image.html")
         image = file.read()
-        if len(image) > 1000 * 1024:
-            return "Virhe! Liian suuri kuva!"
+        if len(image) >= 1000 * 1024:
+            return render_template("error_image.html")
         dbo.add_image(image, recipe_id)
 
     return redirect("/recipe/" + str(recipe_id))
@@ -147,10 +147,10 @@ def edit_recipe(recipe_id):
         file = request.files["image"]
         if file:
             if not file.filename.endswith(".jpg"):
-                return "Virhe! Väärä tiedostomuoto!"
+                return render_template("error_image.html")
             image = file.read()
             if len(image) > 1000 * 1024:
-                return "Virhe! Liian suuri kuva!"
+                return render_template("error_image.html")
             dbo.add_image(image, recipe_id)
 
         return redirect("/recipe/" + str(recipe_id))
