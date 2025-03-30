@@ -1,5 +1,5 @@
 # Ruokareseptit
-
+Sovellus ei läpäissy periodin 3 loppuarvostelua, nyt korjattu ja valmis arvosteltavaksi.
 
 ## Tavoitteet:
 
